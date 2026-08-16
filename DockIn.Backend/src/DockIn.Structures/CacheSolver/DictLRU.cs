@@ -50,6 +50,8 @@ public class DictLRU<TKey, TValue> : ICacheResolve<TKey, TValue> where TKey : no
 
     public int Capacity => _map.Capacity;
 
+    double ICacheResolve<TKey, TValue>.HitRatio => throw new NotImplementedException();
+
     public void Clear()
     {
         _map = new Dictionary<TKey, LruNode>(DEFAULT_SIZE);
@@ -81,11 +83,18 @@ public class DictLRU<TKey, TValue> : ICacheResolve<TKey, TValue> where TKey : no
         {
             _usageList.remove(node);
             _map.Remove(key);
+            _counter--;
         }
 
-        if (_counter > _map.Capacity)
+        if (_counter >= DEFAULT_SIZE)
         {
+            LruNode ultimo = _usageList.last();
 
+            _usageList.removeLast();
+            _map.Remove(ultimo.Key);
+
+            _evictions++;
+            _counter--;
         }
 
         LruNode novoNode = new LruNode(key, value, expiry);
