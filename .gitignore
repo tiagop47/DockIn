@@ -1,0 +1,31 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+artifacts/
+TestResults/
+BenchmarkDotNet.Artifacts/
+
+# Node / Angular
+node_modules/
+dist/
+.angular/
+
+# Android
+.gradle/
+build/
+local.properties
+*.apk
+*.keystore
+
+# Ambiente
+.env
+*.local.json
+appsettings.Development.json
+
+# IDE
+.vs/
+.idea/
+*.swp
+.DS_Store

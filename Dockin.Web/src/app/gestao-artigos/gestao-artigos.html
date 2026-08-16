@@ -1,0 +1,109 @@
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+
+            <!-- Card do Formulário -->
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-header bg-primary text-white p-3 rounded-top-3">
+                    <h4 class="mb-0 fw-bold">➕ Criar Novo Artigo</h4>
+                    <small class="text-white-50">Preencha os campos abaixo para registar um produto</small>
+                </div>
+
+                <div class="card-body p-4">
+
+                    @if (artigoCriado()) {
+                    <div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+                        <div class="d-flex align-items-center mb-2">
+                            <strong class="fs-5">Artigo Criado com Sucesso!</strong>
+                        </div>
+                        <hr class="my-2">
+                        <ul class="list-unstyled mb-0 small">
+                            <li><strong>ID Gerado:</strong> #{{ artigoCriado()?.artigoId }}</li>
+                            <li><strong>Descrição:</strong> {{ artigoCriado()?.description }}</li>
+                            <li><strong>Peso:</strong> {{ artigoCriado()?.peso }} kg</li>
+                            <li><strong>Dimensões:</strong> {{ artigoCriado()?.dimensoes }}</li>
+                        </ul>
+                    </div>
+                    }
+
+                    <!-- Alerta de Erro -->
+                    @if (resposta()) {
+                    <div class="alert alert-danger d-flex align-items-center shadow-sm mb-4" role="alert">
+                        <span class="fs-4 me-2">⚠️</span>
+                        <div>
+                            <strong class="d-block">Erro ao guardar:</strong>
+                            <span>{{ resposta()?.mensagem }}</span>
+                        </div>
+                    </div>
+                    }
+
+                    <!-- Formulário ReactiveForms -->
+                    <form [formGroup]="artigoForm" (ngSubmit)="submeterFormulario()">
+
+                        <!-- Descrição -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Descrição do Artigo</label>
+                            <input type="text" formControlName="description" class="form-control"
+                                placeholder="Ex: Caixa de Ferramentas M8"
+                                [class.is-invalid]="artigoForm.controls.description.touched && artigoForm.controls.description.invalid">
+                            @if (artigoForm.controls.description.touched && artigoForm.controls.description.invalid) {
+                            <div class="invalid-feedback">
+                                A descrição é obrigatória.
+                            </div>
+                            }
+                        </div>
+
+                        <!-- Row para Peso e Dimensões -->
+                        <div class="row g-3 mb-3">
+                            <!-- Peso -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Peso (kg)</label>
+                                <input type="number" step="0.1" formControlName="peso" class="form-control"
+                                    placeholder="Ex: 2.5"
+                                    [class.is-invalid]="artigoForm.controls.peso.touched && artigoForm.controls.peso.invalid">
+                                @if (artigoForm.controls.peso.touched && artigoForm.controls.peso.invalid) {
+                                <div class="invalid-feedback">
+                                    O peso deve ser maior que 0.
+                                </div>
+                                }
+                            </div>
+
+                            <!-- Dimensões -->
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Dimensões</label>
+                                <input type="number" formControlName="dimensoes" class="form-control"
+                                    placeholder="Ex: 15"
+                                    [class.is-invalid]="artigoForm.controls.dimensoes.touched && artigoForm.controls.dimensoes.invalid">
+                                @if (artigoForm.controls.dimensoes.touched && artigoForm.controls.dimensoes.invalid) {
+                                <div class="invalid-feedback">
+                                    A dimensão é obrigatória.
+                                </div>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Classe de Artigo -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Classe do Artigo</label>
+                            <select formControlName="classeArtigo" class="form-select">
+                                <option [value]="0">Classe A (Alta Prioridade)</option>
+                                <option [value]="1">Classe B (Média Prioridade)</option>
+                                <option [value]="2">Classe C (Baixa Prioridade)</option>
+                            </select>
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm"
+                                [disabled]="artigoForm.invalid">
+                                Guardar Artigo
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

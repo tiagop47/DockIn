@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="DockIn.Structures/DockIn.Structures.csproj" />
+  <Project Path="DockIn.Api/DockIn.Api.csproj" />
+</Solution>
