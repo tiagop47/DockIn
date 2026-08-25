@@ -23,12 +23,12 @@ public class ArtigoRepository : IArtigoRepository
                               .ExecuteDeleteAsync();
     }
 
-    public async Task<IEnumerable<Artigo>> ObterArtigoPaginado(int pagina, int tamanhoPagina = 20)
+    public async Task<IEnumerable<Artigo>> ObterArtigoPaginado(int pagina, int tamanho = 20)
     {
         return await _context.Artigos.AsNoTracking()
         .OrderBy(a => a.ArtigoId)
-        .Skip((pagina - 1) * tamanhoPagina)
-        .Take(tamanhoPagina)
+        .Skip((pagina - 1) * tamanho)
+        .Take(tamanho)
         .ToListAsync();
     }
 

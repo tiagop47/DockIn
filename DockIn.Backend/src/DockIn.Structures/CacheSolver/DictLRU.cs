@@ -22,7 +22,6 @@ public class DictLRU<TKey, TValue> : ICacheResolve<TKey, TValue> where TKey : no
     {
         _map = new Dictionary<TKey, LruNode>(DEFAULT_SIZE);
         _usageList = new DoubleLinkedList<LruNode>();
-
         _hits = 0;
         _misses = 0;
         _counter = 0;

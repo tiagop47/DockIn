@@ -21,7 +21,7 @@ public class StockService
         var artigo = await _artigoRepository.ObterArtigoPorIdAsync(stock.ArtigoId);
         if (artigo == null)
         {
-            throw new ArgumentNullException(nameof(artigo), "O artigo não existe");
+            throw new KeyNotFoundException(nameof(artigo));
         }
 
         var stockTmp = new Stock(artigo,

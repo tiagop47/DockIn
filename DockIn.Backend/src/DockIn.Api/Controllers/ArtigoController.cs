@@ -24,10 +24,6 @@ public class ArtigoController : ControllerBase
         {
             return BadRequest(new { mensagem = ex.Message });
         }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { mensagem = ex.Message });
-        }
     }
 
     [HttpPost]
@@ -50,16 +46,9 @@ public class ArtigoController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> ObterArtigosPaginados([FromQuery] int pagina = 1, [FromQuery] int tamanhoPagina = 5)
+    public async Task<IActionResult> ObterArtigosPaginados([FromQuery] int pagina = 1, [FromQuery] int tamanho = 5)
     {
-        try
-        {
-            var artigos = await _service.ObterArtigosPaginados(pagina, tamanhoPagina);
-            return Ok(artigos);
-        }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            return BadRequest(new { mensagem = ex.Message });
-        }
+        var artigos = await _service.ObterArtigosPaginados(pagina, tamanho);
+        return Ok(artigos);
     }
 }

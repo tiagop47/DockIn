@@ -17,7 +17,7 @@ export class ArtigosService {
     return this.http.get<ArtigoDto[]>(`${this.API_URL}/artigos`, {
       params: {
         pagina: pagina.pagina,
-        tamanhoPagina: pagina.tamanhoPagina,
+        tamanho: pagina.tamanho,
       },
     });
   }

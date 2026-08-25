@@ -20,7 +20,7 @@ public class ArtigoService
         Artigo? artigo = await _repository.ObterArtigoPorIdAsync(id);
         if (artigo == null)
         {
-            throw new KeyNotFoundException($"O artigo com o ID {id} não foi encontrado.");
+            throw new ArtigoNaoEncontradoException(id);
         }
 
         return new ArtigoDto(
@@ -40,7 +40,10 @@ public class ArtigoService
             throw new ArgumentNullException(nameof(artigo), "Artigo é nulo");
         }
 
-        var tmp = new Artigo(artigo.Description, artigo.Peso, artigo.Dimensoes, artigo.ClasseArtigo);
+        var tmp = new Artigo(artigo.Description,
+            artigo.Peso,
+            artigo.Dimensoes,
+            artigo.ClasseArtigo);
 
         await _repository.AdicionarArtigoAsync(tmp);
 
@@ -65,14 +68,14 @@ public class ArtigoService
         return true;
     }
 
-    public async Task<IEnumerable<ArtigoDto>> ObterArtigosPaginados(int pagina = 1, int tamanhoPagina = 5)
+    public async Task<IEnumerable<ArtigoDto>> ObterArtigosPaginados(int pagina = 1, int tamanho = 5)
     {
         if (pagina <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(pagina), "A página deve ser > 0");
         }
 
-        var artigos = await _repository.ObterArtigoPaginado(pagina, tamanhoPagina);
+        var artigos = await _repository.ObterArtigoPaginado(pagina, tamanho);
 
         return artigos.Select(a => new ArtigoDto(
             a.ArtigoId,

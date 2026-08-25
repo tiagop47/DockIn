@@ -33,12 +33,12 @@ public class StockRepository : IStockRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<IEnumerable<Stock>> ObterStockPaginado(int pagina, int tamanhoPagina = 20)
+    public async Task<IEnumerable<Stock>> ObterStockPaginado(int pagina, int tamanho = 20)
     {
         return await _context.Stocks.AsNoTracking()
         .OrderBy(a => a.StockId)
-        .Skip((pagina - 1) * tamanhoPagina)
-        .Take(tamanhoPagina)
+        .Skip((pagina - 1) * tamanho)
+        .Take(tamanho)
         .ToListAsync();
     }
 

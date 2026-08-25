@@ -6,5 +6,5 @@ public interface IStockRepository
     Task AdicionarStockAsync(Stock stock);
     Task EliminarStockPorIdAsync(int id);
     Task AtualizarStockPorIdAsync(Stock stock);
-    Task<IEnumerable<Stock>> ObterStockPaginado(int pagina, int tamanhoPagina = 20);
+    Task<IEnumerable<Stock>> ObterStockPaginado(int pagina, int tamanho = 20);
 }

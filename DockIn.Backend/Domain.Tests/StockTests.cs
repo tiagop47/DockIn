@@ -20,8 +20,6 @@ public class StockTests
             ArtigoClasses.B);
     }
 
-
-
     private static List<Artigo> ListaDeStock()
     {
         List<Artigo> lista = new List<Artigo>();

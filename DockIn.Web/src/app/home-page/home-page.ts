@@ -6,11 +6,11 @@ import { MensagemDto } from '../Dto/MensagemDto';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { PaginacaoDto } from '../Dto/PaginacaoDto';
-import { GestaoArtigos } from "../gestao-artigos/gestao-artigos";
+import { RouterLink, RouterLinkActive } from "@angular/router";
 
 @Component({
   selector: 'app-home-page',
-  imports: [ReactiveFormsModule, GestaoArtigos],
+  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css',
 })
@@ -22,7 +22,7 @@ export class HomePage implements OnInit {
 
   pesquisaController = new FormControl<number | null>(null);
 
-  paginacaoAtual = signal<PaginacaoDto>({ pagina: 1, tamanhoPagina: 5 });
+  paginacaoAtual = signal<PaginacaoDto>({ pagina: 1, tamanho: 5 });
   isUltimaPagina = signal<boolean>(false);
 
   ngOnInit(): void {
@@ -46,7 +46,7 @@ export class HomePage implements OnInit {
       next: (artigos) => {
         this.artigos.set(artigos);
 
-        const chegouAoFim = artigos.length < this.paginacaoAtual().tamanhoPagina;
+        const chegouAoFim = artigos.length < this.paginacaoAtual().tamanho;
         this.isUltimaPagina.set(chegouAoFim);
       },
       error: (err: HttpErrorResponse) => {
@@ -63,7 +63,7 @@ export class HomePage implements OnInit {
   mudarPagina(numeroPagina: number): void {
     const novaPagina: PaginacaoDto = {
       pagina: numeroPagina,
-      tamanhoPagina: this.paginacaoAtual().tamanhoPagina,
+      tamanho: this.paginacaoAtual().tamanho,
     };
 
     this.paginacaoAtual.set(novaPagina);

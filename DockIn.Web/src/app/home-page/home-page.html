@@ -1,9 +1,30 @@
 <div class="container py-4">
 
+    <!-- Navbar Principal -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary rounded-4 shadow-sm mb-4 px-3">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold d-flex align-items-center gap-2" routerLink="/">
+                <span>⚓ DockIn</span>
+            </a>
+
+            <div class="navbar-nav ms-auto d-flex flex-row gap-2">
+                <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link px-3 fw-semibold">
+                    Home
+                </a>
+                <a routerLink="/gestao" routerLinkActive="active" class="nav-link px-3 fw-semibold">
+                    📦 Gestão de Artigos
+                </a>
+                <a routerLink="/about" routerLinkActive="active" class="nav-link px-3 fw-semibold">
+                    Sobre
+                </a>
+            </div>
+        </div>
+    </nav>
+
     <!-- Cabeçalho Principal -->
     <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-3">
         <div>
-            <h1 class="fw-bold text-primary m-0">Gestão de Artigos</h1>
+            <h1 class="fw-bold text-primary m-0">Catálogo de Artigos</h1>
             <p class="text-muted small m-0 mt-1">Consulte e pesquise os artigos registados no sistema</p>
         </div>
     </div>
@@ -109,5 +130,4 @@
         }
     </div>
 
-    <app-gestao-artigos></app-gestao-artigos>
 </div>

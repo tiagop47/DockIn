@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 
@@ -11,27 +12,42 @@ public class ExcecoesMiddleware : IMiddleware
         {
             await next(context);
         }
-        catch (Exception ex) when (ex is NpgsqlException || ex is InvalidOperationException)
+        catch (Exception ex)
         {
-            await TratarErroInfraestruturaAsync(
-                context,
-                HttpStatusCode.ServiceUnavailable,
-                "Serviço de base de dados temporariamente indisponível.");
+            await MapearExceptions(context, ex);
         }
-        catch (DbUpdateException)
+    }
+
+    public static Task MapearExceptions(HttpContext context, Exception ex)
+    {
+        HttpStatusCode status;
+        string mensagem;
+
+        switch (ex)
         {
-            await TratarErroInfraestruturaAsync(
-                context,
-                HttpStatusCode.InternalServerError,
-                "Ocorreu um erro ao guardar os dados na base de dados.");
+            case NotFoundException:
+                status = HttpStatusCode.NotFound;
+                mensagem = ex.Message;
+                break;
+
+            case DomainException:
+                status = HttpStatusCode.BadRequest;
+                mensagem = ex.Message;
+                break;
+
+            case InvalidOperationException:
+                status = HttpStatusCode.ServiceUnavailable;
+                mensagem = "Serviço de base dados temporariamente indisponível.";
+                break;
+
+            default:
+                status = HttpStatusCode.InternalServerError;
+                mensagem = "Ocorreu um erro inesperado no servidor.";
+                break;
+
         }
-        catch (Exception)
-        {
-            await TratarErroInfraestruturaAsync(
-                context,
-                HttpStatusCode.InternalServerError,
-                "Ocorreu um erro inesperado no servidor.");
-        }
+
+        return TratarErroInfraestruturaAsync(context, status, mensagem);
     }
 
     private static Task TratarErroInfraestruturaAsync(
