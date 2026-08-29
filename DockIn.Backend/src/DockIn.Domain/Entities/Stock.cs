@@ -4,6 +4,8 @@ public class Stock
 {
     public int StockId { get; private set; }
 
+    public int ArmazemId { get; private set; }
+
     public int ArtigoId { get; private set; }
 
     public double Preco { get; private set; }
@@ -17,7 +19,7 @@ public class Stock
 
     public Stock() { }
 
-    public Stock(Artigo artigo, double preco, int quantidade)
+    public Stock(Armazem armazem, Artigo artigo, double preco, int quantidade)
     {
         if (artigo == null)
         {
@@ -34,6 +36,7 @@ public class Stock
             throw new ArgumentOutOfRangeException(nameof(preco), "Preco tem de ser positivo");
         }
 
+        ArmazemId = armazem.ArmazemId;
         ArtigoId = artigo.ArtigoId;
         Preco = preco;
         Quantidade = quantidade;
@@ -91,8 +94,9 @@ public class Stock
             : HashCode.Combine(ArtigoId, Preco, Quantidade);
     }
 
-    public static explicit operator Stock(Task<Stock?> v)
+    public override string ToString()
     {
-        throw new NotImplementedException();
+        return $"{ArmazemId}, {ArtigoId}";
+
     }
 }

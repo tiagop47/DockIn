@@ -98,4 +98,12 @@ public class Artigo
             ? HashCode.Combine(ArtigoId)
             : HashCode.Combine(Description?.ToLowerInvariant());
     }
+
+
+    public override string ToString()
+    {
+        return $"{Description}, {ArtigoId}";
+    }
+
+
 }

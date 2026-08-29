@@ -1,0 +1,67 @@
+name: QA Pipeline
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master", "develop" ]
+
+# Cancela execuções anteriores se novos commits forem feitos na mesma branch/PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-qa:
+    name: Backend QA (.NET)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET com Cache
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            9.0.x
+            10.0.x
+          cache: true
+          cache-dependency-path: DockIn.Backend/src/DockIn.Backend.slnx
+
+      - name: Restaurar Dependências
+        run: dotnet restore DockIn.Backend/src/DockIn.Backend.slnx
+
+      - name: Build Backend
+        run: dotnet build DockIn.Backend/src/DockIn.Backend.slnx -c Release
+
+      - name: Executar Testes Unitários
+        run: dotnet test DockIn.Backend/Domain.Tests/Domain.Tests.csproj -c Release --verbosity normal
+
+  frontend-qa:
+    name: Frontend QA (Angular)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./DockIn.Web
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js com Cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: DockIn.Web/package-lock.json
+
+      - name: Instalar Dependências
+        run: npm ci
+
+      - name: Validar Build Frontend
+        run: npm run build
+
+      - name: Executar Testes Frontend
+        run: npm test -- --watch=false

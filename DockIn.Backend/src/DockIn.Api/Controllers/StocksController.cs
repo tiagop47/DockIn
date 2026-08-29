@@ -30,21 +30,4 @@ public class StocksController : ControllerBase
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> CriarStock([FromBody] CriarStockDto dto)
-    {
-        try
-        {
-            StockDto? stock = await _service.CriarStockAsync(dto);
-            return CreatedAtAction(nameof(ObterPorId), new { id = stock.StockId }, stock);
-        }
-        catch (ArgumentOutOfRangeException ex)
-        {
-            return BadRequest(new { mensagem = ex.Message });
-        }
-        catch (ArgumentNullException ex)
-        {
-            return NotFound(new { mensagem = ex.Message });
-        }
-    }
 }

@@ -6,11 +6,11 @@ import { MensagemDto } from '../Dto/MensagemDto';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { PaginacaoDto } from '../Dto/PaginacaoDto';
-import { RouterLink, RouterLinkActive } from "@angular/router";
+import { Navbar } from '../navbar/navbar';
 
 @Component({
   selector: 'app-home-page',
-  imports: [ReactiveFormsModule, RouterLink, RouterLinkActive],
+  imports: [ReactiveFormsModule, Navbar],
   templateUrl: './home-page.html',
   styleUrl: './home-page.css',
 })

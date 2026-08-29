@@ -1,4 +1,4 @@
-public class ArtigoNaoEncontradoException : NotFoundException
+public class ArtigoNaoEncontradoException : DomainException
 {
 
     public ArtigoNaoEncontradoException(int id) :

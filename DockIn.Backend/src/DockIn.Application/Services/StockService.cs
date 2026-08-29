@@ -3,56 +3,10 @@ using DockIn.Application.Dtos;
 public class StockService
 {
     private readonly IStockRepository _stockRepository;
-    private readonly IArtigoRepository _artigoRepository;
 
-    public StockService(IStockRepository repository, IArtigoRepository artigoRepository)
+    public StockService(IStockRepository repository)
     {
         _stockRepository = repository;
-        _artigoRepository = artigoRepository;
-    }
-
-    public async Task<StockDto?> CriarStockAsync(CriarStockDto stock)
-    {
-        if (stock == null)
-        {
-            throw new ArgumentNullException(nameof(stock), "O Stock é inválido");
-        }
-
-        var artigo = await _artigoRepository.ObterArtigoPorIdAsync(stock.ArtigoId);
-        if (artigo == null)
-        {
-            throw new KeyNotFoundException(nameof(artigo));
-        }
-
-        var stockTmp = new Stock(artigo,
-                                 stock.Preco,
-                                 stock.Quantidade);
-
-        await _stockRepository.AdicionarStockAsync(stockTmp);
-
-        return new StockDto(
-            stockTmp.StockId,
-            stockTmp.ArtigoId,
-            stockTmp.Preco,
-            stockTmp.Quantidade,
-            stockTmp.QuantidadeReservada,
-            stockTmp.CreatedAt
-        );
-    }
-
-    public async Task<bool> IncrementarQuantidadeStockAsync(int id, int quantidade)
-    {
-        Stock? tmp = await _stockRepository.ObterStockPorIdAsync(id);
-
-        if (tmp == null)
-        {
-            throw new ArgumentNullException(nameof(id), "Não existe nenhum stock com esse id");
-        }
-
-        tmp.IncrementarQuantidade(quantidade);
-        await _stockRepository.AtualizarStockPorIdAsync(tmp);
-
-        return true;
     }
 
     public async Task<StockDto?> ObterStockPorIdAsync(int id)
@@ -79,5 +33,21 @@ public class StockService
         );
     }
 
+    public async Task<IEnumerable<StockDto>?> ObterStockPaginado(int pagina, int tamanho = 5)
+    {
+        if (pagina < 0)
+        {
+            throw new ArgumentOutOfRangeException("Número de página Inválido");
+        }
+
+        IEnumerable<Stock> stock = await _stockRepository.ObterStockPaginado(pagina, tamanho);
+
+        return stock.Select(s => new StockDto(s.StockId,
+            s.ArtigoId,
+            s.Preco,
+            s.Quantidade,
+            s.QuantidadeReservada,
+            s.CreatedAt));
+    }
 
 }

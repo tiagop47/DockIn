@@ -14,6 +14,7 @@ public static class DependecyInjection
         //Repositórios
         services.AddScoped<IArtigoRepository, ArtigoRepository>();
         services.AddScoped<IStockRepository, StockRepository>();
+        services.AddScoped<IArmazemRepository, ArmazemRepository>();
 
         //Serviços
         services.AddScoped<ArtigoService>();

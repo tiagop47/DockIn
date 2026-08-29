@@ -6,6 +6,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Artigo> Artigos { get; set; }
     public DbSet<Stock> Stocks { get; set; }
 
+    public DbSet<Armazem> Armazens { get; set; }
+
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
 

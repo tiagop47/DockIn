@@ -77,13 +77,11 @@ public class ArtigoService
 
         var artigos = await _repository.ObterArtigoPaginado(pagina, tamanho);
 
-        return artigos.Select(a => new ArtigoDto(
-            a.ArtigoId,
-            a.Description,
-            a.Peso,
-            a.Dimensoes,
-            a.ClasseArtigo,
-            a.CreatedAt
-        ));
+        return artigos.Select(a => new ArtigoDto(a.ArtigoId,
+                                                 a.Description,
+                                                 a.Peso,
+                                                 a.Dimensoes,
+                                                 a.ClasseArtigo,
+                                                 a.CreatedAt));
     }
 }

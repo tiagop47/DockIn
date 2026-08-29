@@ -18,14 +18,11 @@ public class StockConfiguration : IEntityTypeConfiguration<Stock>
         builder.Property(s => s.Preco)
         .IsRequired();
 
-
         builder.Property(s => s.Quantidade)
         .IsRequired();
 
-
         builder.Property(s => s.QuantidadeReservada)
         .IsRequired();
-
 
         builder.Property(s => s.CreatedAt)
         .IsRequired();
