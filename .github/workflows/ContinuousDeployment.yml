@@ -1,0 +1,70 @@
+name: CD / Continuous Deployment & Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    name: Build & Package Release Artifacts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Código
+        uses: actions/checkout@v4
+
+      # ----------------------------------------------------
+      # 1. Backend Publish (.NET)
+      # ----------------------------------------------------
+      - name: Configurar .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            9.0.x
+            10.0.x
+          cache: true
+          cache-dependency-path: DockIn.Backend/src/DockIn.Backend.slnx
+
+      - name: Restaurar Dependências Backend
+        run: dotnet restore DockIn.Backend/src/DockIn.Backend.slnx
+
+      - name: Publicar Backend (Release)
+        run: dotnet publish DockIn.Backend/src/DockIn.Api/DockIn.Api.csproj -c Release -o ./publish/backend --no-restore
+
+      - name: Compactar Backend
+        run: tar -czvf backend-release.tar.gz -C ./publish/backend .
+
+      # ----------------------------------------------------
+      # 2. Frontend Publish (Angular)
+      # ----------------------------------------------------
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+          cache-dependency-path: DockIn.Web/package-lock.json
+
+      - name: Instalar Dependências Frontend
+        working-directory: ./DockIn.Web
+        run: npm ci
+
+      - name: Compilar Frontend Produção
+        working-directory: ./DockIn.Web
+        run: npm run build
+
+      - name: Compactar Frontend
+        run: tar -czvf frontend-release.tar.gz -C ./DockIn.Web/dist/Dockin.Web/browser .
+
+      # ----------------------------------------------------
+      # 3. Anexar Artefatos à Release do GitHub
+      # ----------------------------------------------------
+      - name: Upload dos Artefatos para a Release
+        uses: softprops/action-gh-release@v2
+        if: github.event_name == 'release'
+        with:
+          files: |
+            backend-release.tar.gz
+            frontend-release.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

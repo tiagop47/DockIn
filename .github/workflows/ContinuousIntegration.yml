@@ -1,4 +1,4 @@
-name: QA Pipeline
+name: CI / Continuous Integration
 
 on:
   push:
