@@ -3,9 +3,10 @@ using DockIn.Domain;
 
 public class Armazem
 {
+    public const int CAPACIDADE_DEFAULT = 5;
     public int ArmazemId { get; }
 
-    public string Localizacao { get; private set; } = string.Empty;
+    public Localizacao? Localizacao { get; private set; }
 
     public IReadOnlyCollection<Stock> Stock => _stocks.AsReadOnly();
     private List<Stock> _stocks = new();
@@ -14,10 +15,18 @@ public class Armazem
 
     public Armazem() { }
 
-    public Armazem(string localizacao)
+    public Armazem(Localizacao? localizacao)
     {
-        Localizacao = localizacao;
-        CapacidadeMaxima = 5;
+        if (localizacao == null)
+        {
+            throw new ArgumentNullException(nameof(localizacao), "Localização Obrigatória");
+        }
+        else
+        {
+            Localizacao = localizacao;
+        }
+
+        CapacidadeMaxima = CAPACIDADE_DEFAULT;
     }
 
     public int OcupacaoArmazem()
@@ -67,4 +76,5 @@ public class Armazem
 
         stock.DecrementarQuantidade(quantidade);
     }
+
 }

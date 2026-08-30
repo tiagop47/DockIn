@@ -1,0 +1,7 @@
+[
+  {
+    "key": "shift+alt+r",
+    "command": "workbench.action.tasks.runTask",
+    "args": "Generate Test Coverage Report"
+  }
+]
