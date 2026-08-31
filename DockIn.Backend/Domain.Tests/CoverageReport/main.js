@@ -290,15 +290,15 @@ var assemblies = [
   {
     "name": "DockIn.Domain",
     "classes": [
-      { "name": "Armazem", "rp": "DockIn.Domain_Armazem.html", "cl": 11, "ucl": 35, "cal": 46, "tl": 80, "cb": 1, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Armazem", "rp": "DockIn.Domain_Armazem.html", "cl": 24, "ucl": 22, "cal": 46, "tl": 80, "cb": 3, "tb": 10, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "ArtigoInvalidoException", "rp": "DockIn.Domain_ArtigoInvalidoException.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "ArtigoNaoEncontradoException", "rp": "DockIn.Domain_ArtigoNaoEncontradoException.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 8, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "DockIn.Domain.AnaliseAbcDomainService", "rp": "DockIn.Domain_AnaliseAbcDomainService.html", "cl": 0, "ucl": 42, "cal": 42, "tl": 61, "cb": 0, "tb": 18, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "DockIn.Domain.Artigo", "rp": "DockIn.Domain_Artigo.html", "cl": 35, "ucl": 27, "cal": 62, "tl": 109, "cb": 7, "tb": 20, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "DockIn.Domain.Artigo", "rp": "DockIn.Domain_Artigo.html", "cl": 36, "ucl": 26, "cal": 62, "tl": 109, "cb": 7, "tb": 20, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "DomainException", "rp": "DockIn.Domain_DomainException.html", "cl": 0, "ucl": 3, "cal": 3, "tl": 7, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "NotFoundException", "rp": "DockIn.Domain_NotFoundException.html", "cl": 0, "ucl": 6, "cal": 6, "tl": 10, "cb": 0, "tb": 0, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
       { "name": "RegraClassificacaoABC", "rp": "DockIn.Domain_RegraClassificacaoABC.html", "cl": 0, "ucl": 11, "cal": 11, "tl": 19, "cb": 0, "tb": 6, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
-      { "name": "Stock", "rp": "DockIn.Domain_Stock.html", "cl": 0, "ucl": 59, "cal": 59, "tl": 102, "cb": 0, "tb": 24, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
+      { "name": "Stock", "rp": "DockIn.Domain_Stock.html", "cl": 17, "ucl": 42, "cal": 59, "tl": 102, "cb": 3, "tb": 24, "cm": 0, "fcm": 0, "tm": 0, "lch": [], "bch": [], "mch": [], "mfch": [], "hc": [], "metrics": { } },
     ]},
 ];
 
@@ -332,12 +332,6 @@ var riskHotspots = [
     ]},
   {
     "assembly": "DockIn.Domain", "class": "RegraClassificacaoABC", "reportPath": "DockIn.Domain_RegraClassificacaoABC.html", "methodName": ".ctor(System.Decimal,System.Decimal)", "methodShortName": ".ctor(...)", "fileIndex": 0, "line": 6,
-    "metrics": [
-      { "value": 42, "exceeded": true },
-      { "value": 6, "exceeded": false },
-    ]},
-  {
-    "assembly": "DockIn.Domain", "class": "Stock", "reportPath": "DockIn.Domain_Stock.html", "methodName": ".ctor(Armazem,DockIn.Domain.Artigo,System.Double,System.Int32)", "methodShortName": ".ctor(...)", "fileIndex": 0, "line": 22,
     "metrics": [
       { "value": 42, "exceeded": true },
       { "value": 6, "exceeded": false },

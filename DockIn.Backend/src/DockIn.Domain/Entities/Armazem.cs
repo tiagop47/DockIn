@@ -41,7 +41,7 @@ public class Armazem
 
     public void AdicionarStock(Artigo artigo, int quantidade, double preco)
     {
-        var stock = _stocks.FirstOrDefault(s => s.ArtigoId == artigo.ArtigoId);
+        var stock = _stocks.FirstOrDefault(s => s.ArtigoId.Equals(artigo));
 
         if (stock != null)
         {
