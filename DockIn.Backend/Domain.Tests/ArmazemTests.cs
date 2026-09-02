@@ -13,6 +13,8 @@ public class ArmazemTests
             , 12
             , 12
             , ArtigoClasses.A);
+
+            if (i == 3) artigos[i].Description = "Coca Cola";
         }
 
         return artigos;
@@ -41,6 +43,24 @@ public class ArmazemTests
         Assert.Equal(5, armazem.OcupacaoArmazem());
     }
 
+    [Fact]
+    public void RemoverStock()
+    {
 
+        Armazem armazem = new Armazem(Localizacao.Porto);
+
+        Artigo[] teste = CriarArtigos();
+
+        for (int i = 0; i < teste.Length; i++)
+        {
+            armazem.AdicionarStock(teste[i], 5, 10);
+        }
+
+        Artigo temporaria = teste.First(s => s.Description.Equals("Coca Cola"));
+
+
+        armazem.RemoverStock(temporaria, 1);
+        Assert.Equal(temporaria, armazem.);
+    }
 
 }
