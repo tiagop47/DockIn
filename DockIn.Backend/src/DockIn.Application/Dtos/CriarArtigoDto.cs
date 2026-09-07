@@ -4,5 +4,5 @@ public record CriarArtigoDto(
     string Description,
     decimal Peso,
     decimal Dimensoes,
-    ArtigoClasses ClasseArtigo
+    ArtigoClasses ArtigoClasses
 );

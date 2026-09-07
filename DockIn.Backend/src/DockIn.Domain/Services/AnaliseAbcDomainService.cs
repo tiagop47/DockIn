@@ -22,7 +22,7 @@ public class AnaliseAbcDomainService
         if (faturacaoTotal == 0)
         {
             foreach (var item in lista)
-                item.Artigo.DefinirClasseArtigo(ArtigoClasses.C);
+                item.Artigo.ArtigoClasses = ArtigoClasses.C;
             return;
         }
 
@@ -37,7 +37,7 @@ public class AnaliseAbcDomainService
         {
             if (item.ValorTotalVendas == 0)
             {
-                item.Artigo.DefinirClasseArtigo(ArtigoClasses.C);
+                item.Artigo.ArtigoClasses = ArtigoClasses.C;
                 continue;
             }
 
@@ -46,15 +46,15 @@ public class AnaliseAbcDomainService
 
             if (percentagemAcumulada <= regra.LimiteClasseA)
             {
-                item.Artigo.DefinirClasseArtigo(ArtigoClasses.A);
+                item.Artigo.ArtigoClasses = ArtigoClasses.C;
             }
             else if (percentagemAcumulada <= regra.LimiteClasseB)
             {
-                item.Artigo.DefinirClasseArtigo(ArtigoClasses.B);
+                item.Artigo.ArtigoClasses = ArtigoClasses.C;
             }
             else
             {
-                item.Artigo.DefinirClasseArtigo(ArtigoClasses.C);
+                item.Artigo.ArtigoClasses = ArtigoClasses.C;
             }
         }
     }

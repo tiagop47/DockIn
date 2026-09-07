@@ -6,30 +6,72 @@ public class Artigo
 
     public string Description { get; set; } = string.Empty;
 
-    public decimal Peso { get; private set; } = 0;
+    public int QUANTIDADE_MAX { get; private set; } = 100;
 
-    public decimal Dimensoes { get; private set; } = 0;
+    private decimal _peso;
+    public decimal Peso
+    {
+        get => _peso;
+
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(_peso), "Não pode existir artigo com _peso negativo");
+            }
+
+            if (value > 9999)
+            {
+                throw new ArgumentOutOfRangeException(nameof(_peso), "Não é fisicamente possível armazenar");
+            }
+
+            _peso = value;
+        }
+    }
+
+    private decimal _dimensoes;
+    public decimal Dimensoes
+    {
+        get => _dimensoes;
+        set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(_dimensoes), "Não podem existir dimensões negativas");
+            }
+
+            if (value > 999)
+            {
+                throw new ArgumentOutOfRangeException(nameof(_dimensoes), "Não é fisicamente possível armazenar");
+            }
+
+            _dimensoes = value;
+        }
+    }
 
     public bool ExigeValidade { get; private set; } = false;
 
-    public ArtigoClasses ClasseArtigo { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
+    public ArtigoClasses ArtigoClasses { get; set; }
 
     public Artigo() { }
 
-    public Artigo(string description,
+    internal Artigo(int artigoId, string description,
                   decimal peso,
                   decimal dimensoes,
-                  ArtigoClasses artigoClasses)
+                  ArtigoClasses artigoClasses) : this(description, peso, dimensoes, artigoClasses)
     {
-        Description = description;
-        Peso = SetPeso(peso);
-        Dimensoes = SetDimensoes(dimensoes);
-        ClasseArtigo = artigoClasses;
-        CreatedAt = DateTime.UtcNow;
+        ArtigoId = artigoId;
     }
 
+    public Artigo(string description, decimal peso, decimal dimensoes, ArtigoClasses artigoClasses)
+    {
+        Description = description;
+        Peso = peso;
+        Dimensoes = dimensoes;
+        ArtigoClasses = artigoClasses;
+    }
 
     public void ToggleValidade()
     {
@@ -42,41 +84,19 @@ public class Artigo
         ExigeValidade = true;
     }
 
-    public void DefinirClasseArtigo(ArtigoClasses novaClasse)
+    public void AtualizarCapacidadeMax_Artigo(int capacidade)
     {
-        ClasseArtigo = novaClasse;
-    }
-
-    public decimal SetPeso(decimal peso)
-    {
-        if (peso < 0)
+        if (capacidade <= 0)
         {
-            throw new ArgumentOutOfRangeException(nameof(peso), "Não pode existir artigo com peso negativo");
+            throw new ArgumentOutOfRangeException(nameof(capacidade), "A capacidade máxima tem de ser superior a zero.");
         }
 
-        if (peso > 9999)
+        if (capacidade > 10_000)
         {
-            throw new ArgumentOutOfRangeException(nameof(peso), "Não é fisicamente possível armazenar");
+            throw new ArgumentOutOfRangeException(nameof(capacidade), "A capacidade máxima excede o limite permitido.");
         }
 
-
-        return peso;
-    }
-
-    public decimal SetDimensoes(decimal dimensoes)
-    {
-        if (dimensoes < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(dimensoes), "Não podem existir dimensões negativas");
-        }
-
-        if (dimensoes > 999)
-        {
-            throw new ArgumentOutOfRangeException(nameof(dimensoes), "Não é fisicamente possível armazenar");
-        }
-
-
-        return dimensoes;
+        QUANTIDADE_MAX = capacidade;
     }
 
     // override object.Equals

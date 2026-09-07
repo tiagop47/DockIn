@@ -1,9 +1,7 @@
-using System.Diagnostics;
 using DockIn.Domain;
 
 public class Armazem
 {
-    public const int CAPACIDADE_DEFAULT = 5;
     public int ArmazemId { get; }
 
     public Localizacao? Localizacao { get; private set; }
@@ -11,11 +9,25 @@ public class Armazem
     public IReadOnlyCollection<Stock> Stock => _stocks.AsReadOnly();
     private List<Stock> _stocks = new();
 
-    public int CapacidadeMaxima { get; private set; }
+    private int _capacidadeMax;
+    public int CapacidadeMaxima
+    {
+        get => _capacidadeMax;
+
+        private set
+        {
+            if (value > 999)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), "Impossivel armazenar tantos itens");
+            }
+
+            _capacidadeMax = value;
+        }
+    }
 
     public Armazem() { }
 
-    public Armazem(Localizacao? localizacao)
+    public Armazem(Localizacao? localizacao, int capacidade = 10)
     {
         if (localizacao == null)
         {
@@ -26,22 +38,35 @@ public class Armazem
             Localizacao = localizacao;
         }
 
-        CapacidadeMaxima = CAPACIDADE_DEFAULT;
+        CapacidadeMaxima = capacidade;
     }
 
-    public int OcupacaoArmazem()
+    public double OcupacaoArmazem()
     {
-        return _stocks.Count;
+        int capacidadeTotalItems = _stocks.Sum(s => s.CapacidadeMaxima);
+        if (capacidadeTotalItems <= 0)
+        {
+            return 0;
+        }
+
+        int totalItems = _stocks.Sum(s => s.Quantidade);
+
+        return totalItems * 100.0 / capacidadeTotalItems;
     }
 
-    public int PosicoesDisponiveis()
+    public int LugaresDisponiveis()
     {
-        return CapacidadeMaxima - _stocks.Count;
+        return CapacidadeMaxima - _stocks.Count(s => s.Quantidade > 0);
     }
 
     public void AdicionarStock(Artigo artigo, int quantidade, double preco)
     {
-        var stock = _stocks.FirstOrDefault(s => s.ArtigoId.Equals(artigo));
+        if (artigo == null)
+        {
+            throw new ArgumentNullException("Não podes passar um artigo null");
+        }
+
+        var stock = _stocks.FirstOrDefault(s => s.ArtigoId.Equals(artigo.ArtigoId));
 
         if (stock != null)
         {
@@ -59,7 +84,6 @@ public class Armazem
         }
     }
 
-
     public void RemoverStock(Artigo artigo, int quantidade)
     {
         if (artigo == null)
@@ -76,5 +100,4 @@ public class Armazem
 
         stock.DecrementarQuantidade(quantidade);
     }
-
 }

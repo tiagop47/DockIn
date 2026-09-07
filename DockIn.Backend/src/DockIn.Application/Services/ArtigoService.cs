@@ -28,7 +28,7 @@ public class ArtigoService
             artigo.Description,
             artigo.Peso,
             artigo.Dimensoes,
-            artigo.ClasseArtigo,
+            artigo.ArtigoClasses,
             artigo.CreatedAt
         );
     }
@@ -43,7 +43,7 @@ public class ArtigoService
         var tmp = new Artigo(artigo.Description,
             artigo.Peso,
             artigo.Dimensoes,
-            artigo.ClasseArtigo);
+            artigo.ArtigoClasses);
 
         await _repository.AdicionarArtigoAsync(tmp);
 
@@ -52,7 +52,7 @@ public class ArtigoService
             tmp.Description,
             tmp.Peso,
             tmp.Dimensoes,
-            tmp.ClasseArtigo,
+            tmp.ArtigoClasses,
             tmp.CreatedAt);
     }
 
@@ -81,7 +81,7 @@ public class ArtigoService
                                                  a.Description,
                                                  a.Peso,
                                                  a.Dimensoes,
-                                                 a.ClasseArtigo,
+                                                 a.ArtigoClasses,
                                                  a.CreatedAt));
     }
 }

@@ -8,12 +8,37 @@ public class Stock
 
     public int ArtigoId { get; private set; }
 
-    public double Preco { get; private set; }
+    public double _preco;
+    public double Preco
+    {
+        get => _preco;
+        private set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), "Preco tem de ser positivo");
+            }
 
-    public int Quantidade { get; private set; }
+            _preco = value;
+        }
+    }
 
-    public int QuantidadeReservada { get; private set; }
+    private int _quantidade;
+    public int Quantidade
+    {
+        get => _quantidade;
+        private set
+        {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(_quantidade), "Quantidade tem de ser inteira positiva");
+            }
 
+            _quantidade = value;
+        }
+    }
+
+    public int CapacidadeMaxima { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public int Versao { get; private set; } = 1;
 
@@ -26,18 +51,15 @@ public class Stock
             throw new ArgumentNullException(nameof(artigo), "O artigo não existe");
         }
 
-        if (quantidade < 0)
+        if (armazem == null)
         {
-            throw new ArgumentOutOfRangeException(nameof(quantidade), "Quantidade tem de ser inteira positiva");
-        }
-
-        if (preco < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(preco), "Preco tem de ser positivo");
+            throw new ArgumentNullException(nameof(artigo), "O artigo não existe");
         }
 
         ArmazemId = armazem.ArmazemId;
         ArtigoId = artigo.ArtigoId;
+        CapacidadeMaxima = artigo.QUANTIDADE_MAX;
+
         Preco = preco;
         Quantidade = quantidade;
         CreatedAt = DateTime.UtcNow;
@@ -48,6 +70,16 @@ public class Stock
         if (quantidade <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(quantidade), "Coloque inteiros positivos para representar quantidade");
+        }
+
+        if (quantidade > CapacidadeMaxima)
+        {
+            throw new ArgumentOutOfRangeException(nameof(quantidade), "Quantidade inicial excede Capacidade Máxima");
+        }
+
+        if (quantidade + Quantidade > CapacidadeMaxima)
+        {
+            throw new ArgumentOutOfRangeException(nameof(quantidade), "Cap máxima Excedida");
         }
 
         Quantidade += quantidade;
@@ -61,14 +93,14 @@ public class Stock
             throw new ArgumentOutOfRangeException("Coloque inteiros positivos para representar quantidade");
         }
 
-        int delta = Quantidade - quantidade;
+        int delta = _quantidade - quantidade;
         if (delta < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(quantidade), "Quantidades negativas não sao aceites");
         }
 
-        Quantidade = delta;
         Versao++;
+        Quantidade -= delta;
     }
 
     // override object.Equals
@@ -84,6 +116,7 @@ public class Stock
 
         // Caso contrário (em memória), compara pelas propriedades do stock
         return ArtigoId == outro.ArtigoId && Preco == outro.Preco && Quantidade == outro.Quantidade;
+
     }
 
     // override object.GetHashCode

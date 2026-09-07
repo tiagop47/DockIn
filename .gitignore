@@ -18,6 +18,7 @@ build/
 local.properties
 *.apk
 *.keystore
+*.hprof
 
 # Ambiente
 .env
