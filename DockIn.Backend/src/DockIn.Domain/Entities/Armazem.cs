@@ -16,6 +16,11 @@ public class Armazem
 
         private set
         {
+            if (value < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), "Valor de itens");
+            }
+
             if (value > 999)
             {
                 throw new ArgumentOutOfRangeException(nameof(value), "Impossivel armazenar tantos itens");
@@ -25,7 +30,7 @@ public class Armazem
         }
     }
 
-    public Armazem() { }
+    protected Armazem() { }
 
     public Armazem(Localizacao? localizacao, int capacidade = 10)
     {
@@ -41,7 +46,7 @@ public class Armazem
         CapacidadeMaxima = capacidade;
     }
 
-    public double OcupacaoArmazem()
+    public int OcupacaoArmazem()
     {
         int capacidadeTotalItems = _stocks.Sum(s => s.CapacidadeMaxima);
         if (capacidadeTotalItems <= 0)
@@ -51,7 +56,7 @@ public class Armazem
 
         int totalItems = _stocks.Sum(s => s.Quantidade);
 
-        return totalItems * 100.0 / capacidadeTotalItems;
+        return totalItems;
     }
 
     public int LugaresDisponiveis()
@@ -66,7 +71,12 @@ public class Armazem
             throw new ArgumentNullException("Não podes passar um artigo null");
         }
 
-        var stock = _stocks.FirstOrDefault(s => s.ArtigoId.Equals(artigo.ArtigoId));
+        if (_stocks.Sum(s => s.Quantidade) + quantidade > CapacidadeMaxima)
+        {
+            throw new DomainException("Capacidade do Armazém foi excedida");
+        }
+
+        var stock = _stocks.FirstOrDefault(s => s.ArtigoId == artigo.ArtigoId);
 
         if (stock != null)
         {
@@ -74,11 +84,6 @@ public class Armazem
         }
         else
         {
-            if (_stocks.Count >= CapacidadeMaxima)
-            {
-                throw new DomainException("Capacidade do Armazém foi excedida");
-            }
-
             Stock novoStock = new Stock(this, artigo, preco, quantidade);
             _stocks.Add(novoStock);
         }

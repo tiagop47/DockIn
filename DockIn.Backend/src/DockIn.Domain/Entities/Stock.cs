@@ -60,6 +60,11 @@ public class Stock
         ArtigoId = artigo.ArtigoId;
         CapacidadeMaxima = artigo.QUANTIDADE_MAX;
 
+        if (quantidade > CapacidadeMaxima)
+        {
+            throw new ArgumentOutOfRangeException(nameof(quantidade), "A quantidade inicial excede a capacidade máxima.");
+        }
+
         Preco = preco;
         Quantidade = quantidade;
         CreatedAt = DateTime.UtcNow;
@@ -70,11 +75,6 @@ public class Stock
         if (quantidade <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(quantidade), "Coloque inteiros positivos para representar quantidade");
-        }
-
-        if (quantidade > CapacidadeMaxima)
-        {
-            throw new ArgumentOutOfRangeException(nameof(quantidade), "Quantidade inicial excede Capacidade Máxima");
         }
 
         if (quantidade + Quantidade > CapacidadeMaxima)
@@ -93,14 +93,13 @@ public class Stock
             throw new ArgumentOutOfRangeException("Coloque inteiros positivos para representar quantidade");
         }
 
-        int delta = _quantidade - quantidade;
-        if (delta < 0)
+        if (Quantidade - quantidade < 0)
         {
             throw new ArgumentOutOfRangeException(nameof(quantidade), "Quantidades negativas não sao aceites");
         }
 
+        Quantidade -= quantidade;
         Versao++;
-        Quantidade -= delta;
     }
 
     // override object.Equals

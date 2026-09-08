@@ -91,7 +91,7 @@ public class Artigo
             throw new ArgumentOutOfRangeException(nameof(capacidade), "A capacidade máxima tem de ser superior a zero.");
         }
 
-        if (capacidade > 10_000)
+        if (capacidade > 10000)
         {
             throw new ArgumentOutOfRangeException(nameof(capacidade), "A capacidade máxima excede o limite permitido.");
         }
