@@ -14,12 +14,6 @@ public class ArmazemTests
     }
 
     [Fact]
-    public void CriarArmazem_Null()
-    {
-        Assert.Throws<ArgumentNullException>(() => new Armazem(null));
-    }
-
-    [Fact]
     public void CriacaoStock_Artigo_Nao_Existe()
     {
         var armazem = new Armazem(Localizacao.Porto);

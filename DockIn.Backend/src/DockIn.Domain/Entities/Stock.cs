@@ -8,8 +8,8 @@ public class Stock
 
     public int ArtigoId { get; private set; }
 
-    public double _preco;
-    public double Preco
+    public decimal _preco;
+    public decimal Preco
     {
         get => _preco;
         private set
@@ -39,12 +39,13 @@ public class Stock
     }
 
     public int CapacidadeMaxima { get; private set; }
+    public int QuantidadeReservada { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public int Versao { get; private set; } = 1;
 
     public Stock() { }
 
-    public Stock(Armazem armazem, Artigo artigo, double preco, int quantidade)
+    public Stock(Armazem armazem, Artigo artigo, decimal preco, int quantidade)
     {
         if (artigo == null)
         {
@@ -56,15 +57,14 @@ public class Stock
             throw new ArgumentNullException(nameof(artigo), "O artigo não existe");
         }
 
-        ArmazemId = armazem.ArmazemId;
-        ArtigoId = artigo.ArtigoId;
-        CapacidadeMaxima = artigo.QUANTIDADE_MAX;
-
-        if (quantidade > CapacidadeMaxima)
+        if (quantidade > artigo.QUANTIDADE_MAX)
         {
             throw new ArgumentOutOfRangeException(nameof(quantidade), "A quantidade inicial excede a capacidade máxima.");
         }
 
+        ArmazemId = armazem.ArmazemId;
+        ArtigoId = artigo.ArtigoId;
+        CapacidadeMaxima = artigo.QUANTIDADE_MAX;
         Preco = preco;
         Quantidade = quantidade;
         CreatedAt = DateTime.UtcNow;

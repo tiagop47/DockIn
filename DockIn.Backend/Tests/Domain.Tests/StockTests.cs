@@ -22,7 +22,7 @@ public class StockTests
         var artigo = new Artigo("Coca Cola", 10, 10, ArtigoClasses.A); // QUANTIDADE_MAX = 100
 
         // Tentar criar com 150 unidades quando a capacidade máxima do artigo é 100
-        Assert.Throws<ArgumentOutOfRangeException>(() => new Stock(armazem, artigo, preco: 5.0, quantidade: 150));
+        Assert.Throws<ArgumentOutOfRangeException>(() => new Stock(armazem, artigo, preco: 5, quantidade: 150));
     }
 
     [Fact]
@@ -30,7 +30,7 @@ public class StockTests
     {
         var armazem = new Armazem(Localizacao.Porto);
         var artigo = new Artigo("Coca Cola", 10, 10, ArtigoClasses.A);
-        var stock = new Stock(armazem, artigo, preco: 5.0, quantidade: 10);
+        var stock = new Stock(armazem, artigo, preco: 5, quantidade: 10);
 
         stock.IncrementarQuantidade(5);
 
@@ -43,7 +43,7 @@ public class StockTests
     {
         var armazem = new Armazem(Localizacao.Porto);
         var artigo = new Artigo("Coca Cola", 10, 10, ArtigoClasses.A); // QUANTIDADE_MAX = 100
-        var stock = new Stock(armazem, artigo, preco: 5.0, quantidade: 90);
+        var stock = new Stock(armazem, artigo, preco: 5, quantidade: 90);
 
         // 90 + 20 = 110 > 100
         Assert.Throws<ArgumentOutOfRangeException>(() => stock.IncrementarQuantidade(20));
@@ -54,7 +54,7 @@ public class StockTests
     {
         var armazem = new Armazem(Localizacao.Porto);
         var artigo = new Artigo("Coca Cola", 10, 10, ArtigoClasses.A);
-        var stock = new Stock(armazem, artigo, preco: 5.0, quantidade: 10);
+        var stock = new Stock(armazem, artigo, preco: 5, quantidade: 10);
 
         stock.DecrementarQuantidade(4);
 
@@ -67,7 +67,7 @@ public class StockTests
     {
         var armazem = new Armazem(Localizacao.Porto);
         var artigo = new Artigo("Coca Cola", 10, 10, ArtigoClasses.A);
-        var stock = new Stock(armazem, artigo, preco: 5.0, quantidade: 5);
+        var stock = new Stock(armazem, artigo, preco: 5, quantidade: 5);
 
         // Tentar retirar 10 quando só há 5 não pode permitir saldo negativo!
         Assert.Throws<ArgumentOutOfRangeException>(() => stock.DecrementarQuantidade(10));

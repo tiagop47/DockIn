@@ -3,7 +3,7 @@ namespace DockIn.Application.Dtos;
 public record StockDto(
     int StockId,
     int ArtigoId,
-    double Preco,
+    decimal Preco,
     int Quantidade,
     int QuantidadeReservada,
     DateTime CreatedAt

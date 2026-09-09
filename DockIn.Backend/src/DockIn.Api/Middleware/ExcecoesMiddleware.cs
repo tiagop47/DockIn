@@ -40,6 +40,11 @@ public class ExcecoesMiddleware : IMiddleware
                 mensagem = "Serviço de base dados temporariamente indisponível.";
                 break;
 
+            case ArgumentNullException:
+                status = HttpStatusCode.ServiceUnavailable;
+                mensagem = ex.Message;
+                break;
+
             default:
                 status = HttpStatusCode.InternalServerError;
                 mensagem = "Ocorreu um erro inesperado no servidor.";

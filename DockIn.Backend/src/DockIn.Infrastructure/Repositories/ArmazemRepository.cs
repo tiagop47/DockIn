@@ -27,7 +27,8 @@ public class ArmazemRepository : IArmazemRepository
 
     public async Task<Armazem?> ObterArmazemPorId(int id)
     {
-        return await _context.Armazens.FirstOrDefaultAsync();
+        return await _context.Armazens.Include(a => a.Stock)
+                                      .FirstOrDefaultAsync(a => a.ArmazemId == id);
 
     }
 

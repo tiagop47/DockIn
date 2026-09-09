@@ -4,7 +4,7 @@ public class Armazem
 {
     public int ArmazemId { get; }
 
-    public Localizacao? Localizacao { get; private set; }
+    public Localizacao Localizacao { get; private set; }
 
     public IReadOnlyCollection<Stock> Stock => _stocks.AsReadOnly();
     private List<Stock> _stocks = new();
@@ -32,17 +32,16 @@ public class Armazem
 
     protected Armazem() { }
 
-    public Armazem(Localizacao? localizacao, int capacidade = 10)
+    internal Armazem(int id, Localizacao localizacao, int capacidade = 10)
     {
-        if (localizacao == null)
-        {
-            throw new ArgumentNullException(nameof(localizacao), "Localização Obrigatória");
-        }
-        else
-        {
-            Localizacao = localizacao;
-        }
+        ArmazemId = id;
+        Localizacao = localizacao;
+        CapacidadeMaxima = capacidade;
+    }
 
+    public Armazem(Localizacao localizacao, int capacidade = 10)
+    {
+        Localizacao = localizacao;
         CapacidadeMaxima = capacidade;
     }
 
@@ -64,7 +63,7 @@ public class Armazem
         return CapacidadeMaxima - _stocks.Count(s => s.Quantidade > 0);
     }
 
-    public void AdicionarStock(Artigo artigo, int quantidade, double preco)
+    public Stock AdicionarStock(Artigo artigo, int quantidade, decimal preco)
     {
         if (artigo == null)
         {
@@ -76,33 +75,51 @@ public class Armazem
             throw new DomainException("Capacidade do Armazém foi excedida");
         }
 
-        var stock = _stocks.FirstOrDefault(s => s.ArtigoId == artigo.ArtigoId);
-
-        if (stock != null)
-        {
-            stock.IncrementarQuantidade(quantidade);
-        }
-        else
-        {
-            Stock novoStock = new Stock(this, artigo, preco, quantidade);
-            _stocks.Add(novoStock);
-        }
+        Stock novoStock = new Stock(this, artigo, preco, quantidade);
+        _stocks.Add(novoStock);
+        return novoStock;
     }
 
-    public void RemoverStock(Artigo artigo, int quantidade)
+    public Stock RemoverStock(Artigo artigo, int quantidade)
     {
         if (artigo == null)
         {
             throw new ArgumentNullException("Não podes passar um artigo null");
         }
 
-        var stock = _stocks.FirstOrDefault(s => s.ArtigoId == artigo.ArtigoId);
+        if (quantidade <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(quantidade));
+        }
 
-        if (stock == null)
+        var stock = _stocks
+            .Where(s => s.ArtigoId == artigo.ArtigoId && s.Quantidade > 0)
+            .OrderBy(s => s.CreatedAt)
+            .FirstOrDefault();
+
+        if (stock is null)
         {
             throw new ArtigoNaoEncontradoException(artigo.ArtigoId);
         }
 
-        stock.DecrementarQuantidade(quantidade);
+        var restante = quantidade;
+        Stock primeiroStock = stock;
+
+        foreach (var lote in _stocks
+            .Where(s => s.ArtigoId == artigo.ArtigoId && s.Quantidade > 0)
+            .OrderBy(s => s.CreatedAt))
+        {
+            var remover = Math.Min(lote.Quantidade, restante);
+            lote.DecrementarQuantidade(remover);
+            restante -= remover;
+
+            if (restante == 0)
+                break;
+        }
+
+        if (restante > 0)
+            throw new DomainException("Quantidade de stock insuficiente.");
+
+        return primeiroStock;
     }
 }

@@ -58,6 +58,11 @@ public class ArtigoService
 
     public async Task<bool> RemoverArtigoAsync(int id)
     {
+        if (id < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(id), "Introduz Id's inteiros positivos");
+        }
+
         var artigo = await _repository.ObterArtigoPorIdAsync(id);
         if (artigo == null)
         {

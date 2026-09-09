@@ -21,7 +21,7 @@ public class ArtigoConfig : IEntityTypeConfiguration<Artigo>
                .IsRequired();
 
 
-        builder.Property(a => a.ClasseArtigo)
+        builder.Property(a => a.ArtigoClasses)
                .HasConversion<string>()
                .IsRequired();
 

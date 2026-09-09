@@ -6,6 +6,10 @@ obj/
 artifacts/
 TestResults/
 BenchmarkDotNet.Artifacts/
+**/CoverageReport/
+**/coverage-report/
+coverage/
+*.cobertura.xml
 
 # Node / Angular
 node_modules/

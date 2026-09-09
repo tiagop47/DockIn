@@ -5,6 +5,6 @@ public record ArtigoDto(
     string Description,
     decimal Peso,
     decimal Dimensoes,
-    ArtigoClasses ClasseArtigo,
+    ArtigoClasses ArtigoClasses,
     DateTime CreatedAt
 );
