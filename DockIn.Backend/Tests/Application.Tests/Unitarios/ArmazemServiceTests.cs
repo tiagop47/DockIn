@@ -1,3 +1,5 @@
+using DockIn.Application.Abstractions;
+using DockIn.Domain.Entities;
 using Moq;
 
 public class ArmazemServiceTests

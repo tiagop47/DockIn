@@ -1,8 +1,10 @@
 using System.Data.Common;
+using DockIn.Application.Abstractions;
+using DockIn.Application.Services;
 using DockIn.Domain;
+using DockIn.Infrastructure.Repositories;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-
 namespace Application.Tests.Integracao;
 
 public class ArtigoRepoIntegracao : IDisposable

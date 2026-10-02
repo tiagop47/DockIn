@@ -1,3 +1,5 @@
+using DockIn.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -6,14 +8,15 @@ builder.Services.AddTransient<ExcecoesMiddleware>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAngular",
-    policy =>
-    {
-        policy.WithOrigins("http://localhost:4200")
-        .AllowAnyMethod()
-        .AllowAnyHeader();
-    });
+  options.AddPolicy("AllowAngular",
+  policy =>
+  {
+    policy.WithOrigins("http://localhost:4200")
+      .AllowAnyMethod()
+      .AllowAnyHeader();
+  });
 });
+
 
 var app = builder.Build();
 

@@ -1,13 +1,13 @@
-import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { environment } from '../../environments/environment.development';
-import { ArtigoDto } from '../Dto/ArtigoDto';
-import { Observable } from 'rxjs';
-import { PaginacaoDto } from '../Dto/PaginacaoDto';
-import { CriarArtigoDto } from '../Dto/CriarArtigoDto';
+import { HttpClient } from "@angular/common/http";
+import { inject, Injectable } from "@angular/core";
+import { environment } from "../../environments/environment.development";
+import { ArtigoDto } from "../Dto/ArtigoDto";
+import { Observable } from "rxjs";
+import { PaginacaoDto } from "../Dto/PaginacaoDto";
+import { CriarArtigoDto } from "../Dto/CriarArtigoDto";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class ArtigosService {
   private http = inject(HttpClient);

@@ -1,4 +1,5 @@
 using DockIn.Domain;
+using DockIn.Domain.Entities;
 
 public class Stock
 {
@@ -38,7 +39,6 @@ public class Stock
         }
     }
 
-    public int CapacidadeMaxima { get; private set; }
     public int QuantidadeReservada { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public int Versao { get; private set; } = 1;
@@ -57,14 +57,8 @@ public class Stock
             throw new ArgumentNullException(nameof(artigo), "O artigo não existe");
         }
 
-        if (quantidade > artigo.QUANTIDADE_MAX)
-        {
-            throw new ArgumentOutOfRangeException(nameof(quantidade), "A quantidade inicial excede a capacidade máxima.");
-        }
-
         ArmazemId = armazem.ArmazemId;
         ArtigoId = artigo.ArtigoId;
-        CapacidadeMaxima = artigo.QUANTIDADE_MAX;
         Preco = preco;
         Quantidade = quantidade;
         CreatedAt = DateTime.UtcNow;
@@ -75,11 +69,6 @@ public class Stock
         if (quantidade <= 0)
         {
             throw new ArgumentOutOfRangeException(nameof(quantidade), "Coloque inteiros positivos para representar quantidade");
-        }
-
-        if (quantidade + Quantidade > CapacidadeMaxima)
-        {
-            throw new ArgumentOutOfRangeException(nameof(quantidade), "Cap máxima Excedida");
         }
 
         Quantidade += quantidade;

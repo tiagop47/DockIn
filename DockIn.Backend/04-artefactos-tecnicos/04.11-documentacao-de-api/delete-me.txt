@@ -1,0 +1,5 @@
+Ficheiro estrutural temporário.
+
+Existe apenas para assegurar a preservação desta pasta na estrutura /projeto.
+Pode ser eliminado quando a pasta contiver pelo menos um artefacto real.
+Se a pasta permanecer vazia, este ficheiro pode ser mantido.

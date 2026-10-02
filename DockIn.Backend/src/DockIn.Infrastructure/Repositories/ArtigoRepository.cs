@@ -1,5 +1,9 @@
+namespace DockIn.Infrastructure.Repositories;
+
+using System.Runtime.CompilerServices;
+using DockIn.Application.Abstractions;
+using DockIn.Application.Services;
 using DockIn.Domain;
-using Microsoft.EntityFrameworkCore;
 
 public class ArtigoRepository : IArtigoRepository
 {
@@ -16,24 +20,18 @@ public class ArtigoRepository : IArtigoRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task EliminarArtigoPorIdAsync(int id)
+    public Task EliminarArtigoPorIdAsync(int id)
     {
-        await _context.Artigos.Where(a => a.ArtigoId == id)
-                              .ExecuteDeleteAsync();
+        throw new NotImplementedException();
     }
 
-    public async Task<IEnumerable<Artigo>> ObterArtigoPaginado(int pagina, int tamanho = 20)
+    public Task<IEnumerable<Artigo>> ObterArtigoPaginado(int pagina, int tamanho = 20)
     {
-        return await _context.Artigos.AsNoTracking()
-        .OrderBy(a => a.ArtigoId)
-        .Skip((pagina - 1) * tamanho)
-        .Take(tamanho)
-        .ToListAsync();
+        throw new NotImplementedException();
     }
 
     public async Task<Artigo?> ObterArtigoPorIdAsync(int id)
     {
         return await _context.Artigos.FindAsync(id);
     }
-
 }

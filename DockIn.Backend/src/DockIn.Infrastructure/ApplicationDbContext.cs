@@ -1,4 +1,5 @@
 using DockIn.Domain;
+using DockIn.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 public class ApplicationDbContext : DbContext

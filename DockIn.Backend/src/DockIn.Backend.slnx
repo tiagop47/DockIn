@@ -1,4 +1,8 @@
 <Solution>
-  <Project Path="DockIn.Structures/DockIn.Structures.csproj" />
+  <Project Path="DockIn.Domain/DockIn.Domain.csproj" />
+  <Project Path="DockIn.Application/DockIn.Application.csproj" />
+  <Project Path="DockIn.Infrastructure/DockIn.Infrastructure.csproj" />
   <Project Path="DockIn.Api/DockIn.Api.csproj" />
+  <Project Path="../Tests/Application.Tests/Application.Tests.csproj" />
+  <Project Path="../Tests/Domain.Tests/Domain.Tests.csproj" />
 </Solution>

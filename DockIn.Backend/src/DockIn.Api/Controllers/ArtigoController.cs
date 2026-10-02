@@ -1,4 +1,5 @@
 using DockIn.Application.Dtos;
+using DockIn.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -31,7 +32,7 @@ public class ArtigoController : ControllerBase
     {
         try
         {
-            ArtigoDto? artigoCriado = await _service.CriarArtigoAsync(dto);
+            ArtigoDto artigoCriado = await _service.CriarArtigoAsync(dto);
             return CreatedAtAction(nameof(ObterArtigoPorId), new { id = artigoCriado.ArtigoId }, artigoCriado);
         }
         catch (ArgumentNullException ex)

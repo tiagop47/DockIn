@@ -1,92 +1,77 @@
+using DockIn.Application.Abstractions;
 using DockIn.Application.Dtos;
+using DockIn.Application.Mappers;
 using DockIn.Domain;
 
-public class ArtigoService
+namespace DockIn.Application.Services
 {
+  public class ArtigoService
+  {
     private readonly IArtigoRepository _repository;
 
     public ArtigoService(IArtigoRepository repository)
     {
-        _repository = repository;
+      _repository = repository;
     }
 
     public async Task<ArtigoDto> ObterPorIdAsync(int id)
     {
-        if (id < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(id), "Introduz Id's inteiros positivos");
-        }
+      if (id < 0)
+      {
+        throw new ArgumentOutOfRangeException(nameof(id), "Introduz Id's inteiros positivos");
+      }
 
-        Artigo? artigo = await _repository.ObterArtigoPorIdAsync(id);
-        if (artigo == null)
-        {
-            throw new ArtigoNaoEncontradoException(id);
-        }
+      Artigo? artigo = await _repository.ObterArtigoPorIdAsync(id);
+      if (artigo != null)
+      {
+        return artigo.ToDto();
+      }
 
-        return new ArtigoDto(
-            artigo.ArtigoId,
-            artigo.Description,
-            artigo.Peso,
-            artigo.Dimensoes,
-            artigo.ArtigoClasses,
-            artigo.CreatedAt
-        );
+      throw new ArtigoNaoEncontradoException(id);
     }
 
-    public async Task<ArtigoDto?> CriarArtigoAsync(CriarArtigoDto artigo)
+    public async Task<ArtigoDto> CriarArtigoAsync(CriarArtigoDto artigo)
     {
-        if (artigo == null)
-        {
-            throw new ArgumentNullException(nameof(artigo), "Artigo é nulo");
-        }
+      if (artigo == null)
+      {
+        throw new ArgumentNullException(nameof(artigo), "Artigo é nulo");
+      }
 
-        var tmp = new Artigo(artigo.Description,
-            artigo.Peso,
-            artigo.Dimensoes,
-            artigo.ArtigoClasses);
+      var tmp = new Artigo(artigo.Peso, artigo.Dimensoes,
+          artigo.UnidadeMedida, artigo.Description);
 
-        await _repository.AdicionarArtigoAsync(tmp);
+      await _repository.AdicionarArtigoAsync(tmp);
 
-        return new ArtigoDto(
-            tmp.ArtigoId,
-            tmp.Description,
-            tmp.Peso,
-            tmp.Dimensoes,
-            tmp.ArtigoClasses,
-            tmp.CreatedAt);
+      return tmp.ToDto();
     }
 
     public async Task<bool> RemoverArtigoAsync(int id)
     {
-        if (id < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(id), "Introduz Id's inteiros positivos");
-        }
+      if (id < 0)
+      {
+        throw new ArgumentOutOfRangeException(nameof(id), "Introduz Id's inteiros positivos");
+      }
 
-        var artigo = await _repository.ObterArtigoPorIdAsync(id);
-        if (artigo == null)
-        {
-            return false;
-        }
+      var artigo = await _repository.ObterArtigoPorIdAsync(id);
+      if (artigo == null)
+      {
+        return false;
+      }
 
-        await _repository.EliminarArtigoPorIdAsync(id);
-        return true;
+      await _repository.EliminarArtigoPorIdAsync(id);
+      return true;
     }
 
     public async Task<IEnumerable<ArtigoDto>> ObterArtigosPaginados(int pagina = 1, int tamanho = 5)
     {
-        if (pagina <= 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(pagina), "A página deve ser > 0");
-        }
+      if (pagina <= 0)
+      {
+        throw new ArgumentOutOfRangeException(nameof(pagina), "A página deve ser > 1");
+      }
 
-        var artigos = await _repository.ObterArtigoPaginado(pagina, tamanho);
+      var artigos = await _repository.ObterArtigoPaginado(pagina, tamanho);
 
-        return artigos.Select(a => new ArtigoDto(a.ArtigoId,
-                                                 a.Description,
-                                                 a.Peso,
-                                                 a.Dimensoes,
-                                                 a.ArtigoClasses,
-                                                 a.CreatedAt));
+      return artigos.Select(a => a.ToDto());
     }
+  }
 }

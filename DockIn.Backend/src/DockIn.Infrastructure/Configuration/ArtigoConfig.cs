@@ -8,25 +8,16 @@ public class ArtigoConfig : IEntityTypeConfiguration<Artigo>
     {
         builder.HasKey(a => a.ArtigoId);
 
-        builder.Property(a => a.Description)
-               .IsRequired();
-
         builder.Property(a => a.Peso)
                .IsRequired();
 
         builder.Property(a => a.Dimensoes)
                .IsRequired();
 
-        builder.Property(a => a.ExigeValidade)
-               .IsRequired();
-
-
-        builder.Property(a => a.ArtigoClasses)
-               .HasConversion<string>()
+        builder.Property(a => a.AtivoBool)
                .IsRequired();
 
         builder.Property(a => a.CreatedAt)
                .IsRequired();
-
     }
 }

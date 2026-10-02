@@ -1,3 +1,5 @@
+using DockIn.Application.Abstractions;
+using DockIn.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 public class ArmazemRepository : IArmazemRepository

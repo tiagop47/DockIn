@@ -3,8 +3,6 @@ namespace DockIn.Application.Dtos;
 public record ArmazemDto(
     int ArmazemId,
     Localizacao Localizacao,
-    int CapacidadeMaxima,
-    int Ocupacao,
     int LugaresDisponiveis,
     IReadOnlyCollection<StockDto> Stocks
 );

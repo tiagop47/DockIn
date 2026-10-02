@@ -1,0 +1,15 @@
+# Top-level .editorconfig
+root = true
+
+[*.cs]
+# Desativa o aviso chato "expression value is never used" (IDE0058)
+dotnet_diagnostic.IDE0058.severity = none
+dotnet_diagnostic.CA1806.severity = none
+
+# Desativa o aviso "Declare types in namespaces" se estiveres a prototipar
+dotnet_diagnostic.CA1050.severity = suggestion
+
+# Desativa a regra de remover underscores (CA1707 e IDE1006) - muito útil em nomes de testes (ex: Metodo_Cenario_Resultado)
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.IDE1006.severity = none
+dotnet_naming_rule.methods_with_underscores_are_allowed.severity = none
