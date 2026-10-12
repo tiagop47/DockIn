@@ -25,12 +25,14 @@ public class ArmazemServiceTests
     [Fact]
     public async Task ObterArmazem_PorId_ArmazemValido()
     {
-        var objeto = new Armazem(0, Localizacao.Porto, 100);
-        _repository.Setup(s => s.ObterArmazemPorId(0)).ReturnsAsync(objeto);
+        var objeto = new Armazem(1, "Porto", "Armazem Central", true);
+        _repository.Setup(s => s.ObterArmazemPorId(1)).ReturnsAsync(objeto);
 
-        var ArmazemValido = await _sut.ObterIdAsync(0);
+        var armazemValido = await _sut.ObterIdAsync(1);
 
-        Assert.Equal(0, ArmazemValido.ArmazemId);
-        Assert.Equal(Localizacao.Porto, ArmazemValido.Localizacao);
+        Assert.Equal(1, armazemValido.ArmazemId);
+        Assert.Equal("Porto", armazemValido.Nome);
+        Assert.Equal("Armazem Central", armazemValido.Descricao);
+        Assert.True(armazemValido.Ativo);
     }
 }

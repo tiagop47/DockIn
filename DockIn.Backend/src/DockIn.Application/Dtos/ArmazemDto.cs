@@ -1,15 +1,17 @@
+using DockIn.Domain.Entities;
+
 namespace DockIn.Application.Dtos;
 
 public record ArmazemDto(
     int ArmazemId,
-    Localizacao Localizacao,
-    int LugaresDisponiveis,
-    IReadOnlyCollection<StockDto> Stocks
+    string Nome,
+    string? Descricao,
+    bool Ativo
 );
 
 public record CriarArmazemDto(
-    Localizacao Localizacao,
-    int Capacidade = 10
+    string Nome,
+    string? Descricao = null
 );
 
 public record AdicionarStockDto(

@@ -5,107 +5,46 @@ namespace Domain.Tests
 {
     public class ArmazemTests
     {
-        public static readonly Random random = new Random();
-
         [Fact]
-        public void CriacaoArmazem_Ok()
+        public void CriarArmazem_ComNomeValido_DeveInicializarComSucesso()
         {
-            Armazem armazem = new Armazem(Localizacao.Porto);
+            var armazem = new Armazem("Armazem Central", "Descricao teste");
 
-            Assert.True(armazem != null);
+            Assert.Equal("Armazem Central", armazem.Nome);
+            Assert.Equal("Descricao teste", armazem.Descricao);
+            Assert.True(armazem.Ativo);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public void CriarArmazem_SemNome_DeveLancarDomainException(string? nomeInvalido)
+        {
+            Assert.Throws<DomainException>(() => new Armazem(nomeInvalido!));
         }
 
         [Fact]
-        public void CriacaoStock_Artigo_Nao_Existe()
+        public void AlterarDados_Valido_DeveAtualizarPropriedades()
         {
-            var armazem = new Armazem(Localizacao.Porto);
-            var artigo = new Artigo(10, 5, 5, UnidadeMedida.Quilograma);
+            var armazem = new Armazem("Original");
+            armazem.AlterarDados("Atualizado", "Nova descricao");
 
-            armazem.AdicionarStock(artigo, 5, 5);
-            int StockArmazem = armazem.Stock.Count;
-
-            Assert.Equal(1, StockArmazem);
+            Assert.Equal("Atualizado", armazem.Nome);
+            Assert.Equal("Nova descricao", armazem.Descricao);
         }
 
         [Fact]
-        public void AdicionarQuantidade_StockSob_MesmoArtigo()
+        public void InativarEAtivar_DeveAlterarEstado()
         {
-            Armazem armazem = new Armazem(Localizacao.Porto);
-            var artigo = new Artigo(12, 5, 5, UnidadeMedida.Quilograma);
+            var armazem = new Armazem("Principal");
+            Assert.True(armazem.Ativo);
 
-            armazem.AdicionarStock(artigo, 5, 5);
-            armazem.AdicionarStock(artigo, 3, 5);
+            armazem.Inativar();
+            Assert.False(armazem.Ativo);
 
-            var stock = armazem.Stock.First();
-
-            var quantidade = 0;
-            foreach (var stocks in armazem.Stock)
-            {
-                if (stocks.ArtigoId == artigo.ArtigoId)
-                {
-                    quantidade = stocks.Quantidade;
-                }
-            }
-
-            Assert.Equal(8, quantidade);
-            Assert.Single(armazem.Stock);
-        }
-
-        [Fact]
-        public void RemoverStock_MinimoViavel_ManterSoftDelete()
-        {
-            Armazem armazem = new Armazem(Localizacao.Porto);
-            var artigo = new Artigo(124, 5, 5, UnidadeMedida.Litro);
-
-            armazem.AdicionarStock(artigo, 5, 5);
-            armazem.RemoverStock(artigo, 5);
-
-            Stock stock = armazem.Stock.First();
-
-            Assert.Equal(0, stock.Quantidade);
-            Assert.Single(armazem.Stock);
-        }
-
-        [Fact]
-        public void LugaresDisponiveis_CalculoCoerente()
-        {
-            var armazem = new Armazem(Localizacao.Porto);
-
-            var artigoA = new Artigo(0, 5, 5, UnidadeMedida.Litro);
-            var artigoB = new Artigo(1, 5, 5, UnidadeMedida.Quilograma);
-
-            armazem.AdicionarStock(artigoA, 5, 5);
-            armazem.AdicionarStock(artigoB, 5, 5);
-
-            int stock = armazem.Stock.Sum(s => s.Quantidade);
-
-            Assert.Equal(stock, armazem.CapacidadeMaxima - armazem.LugaresDisponiveis());
-        }
-
-        [Fact]
-        public void Limite_CapacidadeExcedido_PorUm()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Armazem(Localizacao.Porto, 1000));
-        }
-
-        [Fact]
-        public void Limite_Capacidade_Invalido_Negativo()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Armazem(Localizacao.Porto, -1));
-        }
-
-        [Fact]
-        public void IncrementarStock_Quantidade_InvalidaSuperior()
-        {
-            var armazem = new Armazem(Localizacao.Porto, 999);
-            var artigoA = new Artigo(0, 5, 5, UnidadeMedida.Litro);
-
-            armazem.AdicionarStock(artigoA, 998, 5);
-            Stock stock = armazem.Stock.First(s => s.Quantidade > 0);
-
-            Assert.Equal(998, stock.Quantidade);
-
-            Assert.Throws<DomainException>(() => armazem.AdicionarStock(artigoA, 2, 5));
+            armazem.Ativar();
+            Assert.True(armazem.Ativo);
         }
     }
 }

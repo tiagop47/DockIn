@@ -10,16 +10,14 @@ public class ArmazemConfig : IEntityTypeConfiguration<Armazem>
 
         builder.HasKey(p => p.ArmazemId);
 
-        builder.Property(p => p.Localizacao)
+        builder.Property(p => p.Nome)
+               .IsRequired()
+               .HasMaxLength(100);
+
+        builder.Property(p => p.Descricao)
+               .HasMaxLength(255);
+
+        builder.Property(p => p.Ativo)
                .IsRequired();
-
-        builder.Property(p => p.CapacidadeMaxima)
-               .IsRequired();
-
-        builder.HasMany(p => p.Stock)
-        .WithOne()
-        .HasForeignKey(a => a.ArmazemId)
-        .OnDelete(DeleteBehavior.Restrict);
-
     }
 }

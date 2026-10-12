@@ -84,7 +84,7 @@ public class ArtigoServiceTests
         _repositoryMock.Setup(r => r.ObterArtigoPorIdAsync(1)).ReturnsAsync(artigo);
 
         bool resultado = await _sut.RemoverArtigoAsync(1);
-        Assert.False(resultado);
+        Assert.True(resultado);
 
         _repositoryMock.Verify(r => r.ObterArtigoPorIdAsync(1), Times.Once);
         _repositoryMock.Verify(r => r.EliminarArtigoPorIdAsync(1), Times.Once);

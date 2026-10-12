@@ -2,16 +2,22 @@ using DockIn.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-public class UserConfig : IEntityTypeConfiguration<User>
+namespace DockIn.Infrastructure.Configuration
 {
-    public void Configure(EntityTypeBuilder<User> builder)
+    public class UserConfig : IEntityTypeConfiguration<User>
     {
-        builder.HasKey(u => u.UserId);
-        builder.Property(u => u.Email)
-               .IsRequired()
-               .HasMaxLength(255);
-
-        builder.Property(u => u.PasswordHash)
-      .IsRequired();
+        public void Configure(EntityTypeBuilder<User> builder)
+        {
+            builder.ToTable("Users");
+            builder.HasKey(u => u.UserId);
+            builder.Property(u => u.Email)
+                   .IsRequired()
+                   .HasMaxLength(255);
+            builder.Property(u => u.Ativo);
+            builder.Property(u => u.PasswordHash)
+          .IsRequired();
+            builder.Property(u => u.CreatedAt)
+                .IsRequired();
+        }
     }
 }

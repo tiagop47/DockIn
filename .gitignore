@@ -34,3 +34,4 @@ appsettings.Development.json
 .idea/
 *.swp
 .DS_Store
+/DockIn.Backend/04-artefactos-tecnicos/

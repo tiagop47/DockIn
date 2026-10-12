@@ -21,25 +21,6 @@ namespace DockIn.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Armazem", b =>
-                {
-                    b.Property<int>("ArmazemId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ArmazemId"));
-
-                    b.Property<int>("CapacidadeMaxima")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Localizacao")
-                        .HasColumnType("integer");
-
-                    b.HasKey("ArmazemId");
-
-                    b.ToTable("Armazens", (string)null);
-                });
-
             modelBuilder.Entity("DockIn.Domain.Artigo", b =>
                 {
                     b.Property<int>("ArtigoId")
@@ -48,9 +29,8 @@ namespace DockIn.Infrastructure.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ArtigoId"));
 
-                    b.Property<string>("ArtigoClasses")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<bool>("AtivoBool")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -62,18 +42,103 @@ namespace DockIn.Infrastructure.Migrations
                     b.Property<decimal>("Dimensoes")
                         .HasColumnType("numeric");
 
-                    b.Property<bool>("ExigeValidade")
-                        .HasColumnType("boolean");
-
                     b.Property<decimal>("Peso")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("QUANTIDADE_MAX")
+                    b.Property<int>("UnidadeMedida")
                         .HasColumnType("integer");
 
                     b.HasKey("ArtigoId");
 
                     b.ToTable("Artigos");
+                });
+
+            modelBuilder.Entity("DockIn.Domain.Entities.Armazem", b =>
+                {
+                    b.Property<int>("ArmazemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ArmazemId"));
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Descricao")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("ArmazemId");
+
+                    b.ToTable("Armazens", (string)null);
+                });
+
+            modelBuilder.Entity("DockIn.Domain.Entities.Localizacao", b =>
+                {
+                    b.Property<int>("LocalizacaoId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LocalizacaoId"));
+
+                    b.Property<int>("ArmazemId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Codigo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<string>("Tipo")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.HasKey("LocalizacaoId");
+
+                    b.HasIndex("ArmazemId", "Codigo")
+                        .IsUnique();
+
+                    b.ToTable("Localizacoes", (string)null);
+                });
+
+            modelBuilder.Entity("DockIn.Domain.Entities.User", b =>
+                {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("PerfilUser")
+                        .HasColumnType("integer");
+
+                    b.HasKey("UserId");
+
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Stock", b =>
@@ -90,14 +155,11 @@ namespace DockIn.Infrastructure.Migrations
                     b.Property<int>("ArtigoId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("CapacidadeMaxima")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<double>("Preco")
-                        .HasColumnType("double precision");
+                    b.Property<decimal>("Preco")
+                        .HasColumnType("numeric");
 
                     b.Property<int>("Quantidade")
                         .HasColumnType("integer");
@@ -111,31 +173,27 @@ namespace DockIn.Infrastructure.Migrations
 
                     b.HasKey("StockId");
 
-                    b.HasIndex("ArmazemId");
-
                     b.HasIndex("ArtigoId");
 
                     b.ToTable("Stocks", (string)null);
                 });
 
-            modelBuilder.Entity("Stock", b =>
+            modelBuilder.Entity("DockIn.Domain.Entities.Localizacao", b =>
                 {
-                    b.HasOne("Armazem", null)
-                        .WithMany("Stock")
+                    b.HasOne("DockIn.Domain.Entities.Armazem", null)
+                        .WithMany()
                         .HasForeignKey("ArmazemId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
 
+            modelBuilder.Entity("Stock", b =>
+                {
                     b.HasOne("DockIn.Domain.Artigo", null)
                         .WithMany()
                         .HasForeignKey("ArtigoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Armazem", b =>
-                {
-                    b.Navigation("Stock");
                 });
 #pragma warning restore 612, 618
         }

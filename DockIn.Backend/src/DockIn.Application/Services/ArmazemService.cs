@@ -1,92 +1,46 @@
-using System.Net.Http.Headers;
 using DockIn.Application.Abstractions;
 using DockIn.Application.Dtos;
 using DockIn.Domain.Entities;
 
 public class ArmazemService
 {
-  private readonly IArmazemRepository _armazemRepository;
-  private readonly IArtigoRepository _artigoRepository;
+    private readonly IArmazemRepository _armazemRepository;
+    private readonly IArtigoRepository _artigoRepository;
 
-  public ArmazemService(IArmazemRepository armazemRepository, IArtigoRepository artigoRepository)
-  {
-    _armazemRepository = armazemRepository;
-    _artigoRepository = artigoRepository;
-  }
-
-  public async Task<ArmazemDto> ObterIdAsync(int id)
-  {
-    if (id < 0)
+    public ArmazemService(IArmazemRepository armazemRepository, IArtigoRepository artigoRepository)
     {
-      throw new ArgumentOutOfRangeException(nameof(id));
-    }
-    var armazem = await _armazemRepository.ObterArmazemPorId(id);
-    if (armazem == null)
-    {
-      throw new NotFoundException(nameof(id));
+        _armazemRepository = armazemRepository;
+        _artigoRepository = artigoRepository;
     }
 
-    return armazem.ToDto();
-  }
-
-  public async Task<ArmazemDto> CriarArmazemAsync(CriarArmazemDto dto)
-  {
-    if (dto == null)
+    public async Task<ArmazemDto> ObterIdAsync(int id)
     {
-      throw new ArgumentNullException(nameof(dto));
+        if(id < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(id));
+        }
+        var armazem = await _armazemRepository.ObterArmazemPorId(id);
+
+        if(armazem == null)
+        {
+            throw new NotFoundException(nameof(id));
+        }
+
+        return armazem.ToDto();
     }
 
-    var objeto = new Armazem(dto.Localizacao, dto.Capacidade);
-    await _armazemRepository.CriarArmazem(objeto);
+    public async Task<ArmazemDto> CriarArmazemAsync(CriarArmazemDto dto)
+    {
+        if (dto == null)
+        {
+            throw new ArgumentNullException(nameof(dto));
+        }
 
-    return objeto.ToDto();
-  }
+        var objeto = new Armazem(dto.Nome, dto.Descricao);
+        await _armazemRepository.CriarArmazem(objeto);
 
-  public async Task<StockDto> AdicionarStockAsync(int armazemId, AdicionarStockDto dto)
-  {
-    ArgumentNullException.ThrowIfNull(dto);
+        return objeto.ToDto();
+    }
 
-    if (armazemId <= 0)
-      throw new ArgumentOutOfRangeException(nameof(armazemId));
-
-    if (dto.Quantidade <= 0)
-      throw new ArgumentOutOfRangeException(nameof(dto.Quantidade));
-
-    if (dto.Preco < 0)
-      throw new ArgumentOutOfRangeException(nameof(dto.Preco));
-
-    var armazem = await _armazemRepository.ObterArmazemPorId(armazemId)
-        ?? throw new NotFoundException(nameof(armazemId));
-
-    var artigo = await _artigoRepository.ObterArtigoPorIdAsync(dto.ArtigoId)
-        ?? throw new NotFoundException(nameof(dto.ArtigoId));
-
-    var stock = armazem.AdicionarStock(artigo, dto.Quantidade, dto.Preco);
-    await _armazemRepository.GuardarAlteracoes();
-
-    return stock.ToDto();
-  }
-
-  public async Task<StockDto> RemoverStockAsync(int armazemId, RemoverStockDto dto)
-  {
-    ArgumentNullException.ThrowIfNull(dto);
-
-    if (armazemId <= 0)
-      throw new ArgumentOutOfRangeException(nameof(armazemId));
-
-    if (dto.Quantidade <= 0)
-      throw new ArgumentOutOfRangeException(nameof(dto.Quantidade));
-
-    var armazem = await _armazemRepository.ObterArmazemPorId(armazemId)
-        ?? throw new NotFoundException(nameof(armazemId));
-
-    var artigo = await _artigoRepository.ObterArtigoPorIdAsync(dto.ArtigoId)
-        ?? throw new NotFoundException(nameof(dto.ArtigoId));
-
-    var stock = armazem.RemoverStock(artigo, dto.Quantidade);
-    await _armazemRepository.GuardarAlteracoes();
-
-    return stock.ToDto();
-  }
 
 }

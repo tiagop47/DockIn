@@ -2,63 +2,110 @@ namespace DockIn.Domain.Entities
 {
     public class User
     {
-        public int UserId { get; set; }
+        public int UserId { get; private set; }
+        public Perfil PerfilUser { get; private set; }
+        public bool Ativo { get; private set; }
+        private string _email = null!;
 
-        public Role Role { get; private set; }
-        private bool ativoFlag;
-        public bool AtivoFlag
+        public string Email
         {
-            get => ativoFlag;
+            get => _email;
+
             private set
             {
-                if(ativoFlag == value)
+                if (string.IsNullOrWhiteSpace(value))
                 {
-                    return;
+                    throw new DomainException("Email obrigatório.");
                 }
 
-                ativoFlag = value;
+                value = value.Trim();
+
+                if (value.Length > 254)
+                {
+                    throw new DomainException("Email inválido.");
+                }
+
+                if (!value.Contains('@') || !value.Contains('.'))
+                {
+                    throw new DomainException(nameof(value));
+                }
+
+                _email = value.ToLowerInvariant();
             }
         }
-        public string Email { get; private set; }
-        public string PasswordHash { get; }
+        public string PasswordHash { get; private set; } = null!;
         public DateTime CreatedAt { get; }
 
-        public User(string email, Role role, string passwordHash)
+        public User(string email, Perfil role, string passwordHash)
         {
-            TrocarEmail(email);
-            Role = role;
+            Email = email;
+            PerfilUser = role;
             PasswordHash = passwordHash;
+            Ativo = false;
             CreatedAt = DateTime.UtcNow;
         }
 
-        internal User(int id, string email, Role role, string passwordHash)
+        internal User(int id, string email, Perfil role, string passwordHash)
         {
-            Email = null!;
+            if (string.IsNullOrWhiteSpace(passwordHash))
+            {
+                throw new DomainException(nameof(passwordHash));
+            }
             UserId = id;
-            TrocarEmail(email);
-            Role = role;
+            Email = email;
+            PerfilUser = role;
             PasswordHash = passwordHash;
         }
 
         private User()
         {
+            _email = null!;
             PasswordHash = null!;
-            Email = null!;
         }
 
         public void TrocarEmail(string email)
         {
-            if(string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(email))
             {
-                throw new DomainException(nameof(email));
-            }
-
-            if(!email.ContainsAny<char>('@', '.'))
-            {
-                throw new DomainException(nameof(email));
+                throw new DomainException(email);
             }
 
             Email = email;
+        }
+
+        public void AtualizarPasswordHash(string password)
+        {
+            if (string.IsNullOrEmpty(password))
+            {
+                throw new DomainException(nameof(password));
+            }
+
+            PasswordHash = password;
+        }
+
+        public void AtribuirPerfil(Perfil perfil)
+        {
+            if (!Enum.IsDefined(perfil))
+            {
+                throw new DomainException(nameof(perfil));
+            }
+
+            if (PerfilUser == perfil)
+            {
+                return;
+            }
+
+            PerfilUser = perfil;
+        }
+
+        public void Ativar()
+        {
+            Ativo = true;
+        }
+
+        public void Desativar()
+        {
+            Ativo = false;
         }
     }
 }

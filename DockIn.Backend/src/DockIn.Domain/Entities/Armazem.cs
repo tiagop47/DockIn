@@ -2,108 +2,55 @@ namespace DockIn.Domain.Entities
 {
     public class Armazem
     {
-        public int ArmazemId { get; }
+        public int ArmazemId { get; private set; }
+        public string Nome { get; private set; }
+        public string? Descricao { get; private set; }
+        public bool Ativo { get; private set; }
 
-        public Localizacao Localizacao { get; private set; }
-
-        public IReadOnlyCollection<Stock> Stock => _stocks.AsReadOnly();
-        private readonly List<Stock> _stocks = new();
-
-        private int _capacidadeMax;
-        public int CapacidadeMaxima
+        protected Armazem()
         {
-            get => _capacidadeMax;
-
-            private set
-            {
-                if (value < 0 && value > 999)
-                {
-                    throw new ArgumentOutOfRangeException(paramName: nameof(value), "Valor de itens");
-                }
-
-                _capacidadeMax = value;
-            }
+            Nome = null!;
         }
 
-        protected Armazem() { }
-
-        internal Armazem(int id, Localizacao localizacao, int capacidade = 10)
+        public Armazem(string nome, string? descricao = null)
         {
-            ArmazemId = id;
-            Localizacao = localizacao;
-            CapacidadeMaxima = capacidade;
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                throw new DomainException("O nome do armazém é obrigatório.");
+            }
+
+            Nome = nome.Trim();
+            Descricao = descricao?.Trim();
+            Ativo = true;
         }
 
-        public Armazem(Localizacao localizacao, int capacidade = 10)
+        internal Armazem(int armazemId, string nome, string? descricao = null, bool ativo = true)
+            : this(nome, descricao)
         {
-            Localizacao = localizacao;
-            CapacidadeMaxima = capacidade;
+            ArmazemId = armazemId;
+            Ativo = ativo;
         }
 
-        public int LugaresDisponiveis()
+
+        public void AlterarDados(string nome, string? descricao = null)
         {
-            return CapacidadeMaxima - _stocks.Count(s => s.Quantidade > 0);
+            if (string.IsNullOrWhiteSpace(nome))
+            {
+                throw new DomainException("O nome do armazém é obrigatório.");
+            }
+
+            Nome = nome.Trim();
+            Descricao = descricao?.Trim();
         }
 
-        public Stock AdicionarStock(Artigo artigo, int quantidade, decimal preco)
+        public void Ativar()
         {
-            ArgumentNullException.ThrowIfNull(artigo);
-
-            if (_stocks.Sum(s => s.Quantidade) + quantidade > CapacidadeMaxima)
-            {
-                throw new DomainException("Capacidade do Armazém foi excedida");
-            }
-
-            foreach (var item in _stocks)
-            {
-                item.IncrementarQuantidade(quantidade);
-            }
-
-            Stock novoStock = new Stock(this, artigo, preco, quantidade);
-            return novoStock;
+            Ativo = true;
         }
 
-        public Stock RemoverStock(Artigo artigo, int quantidade)
+        public void Inativar()
         {
-            if (artigo == null)
-            {
-                throw new ArgumentNullException("Não podes passar um artigo null");
-            }
-
-            if (quantidade <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(quantidade));
-            }
-
-            var stock = _stocks
-                .Where(s => s.ArtigoId == artigo.ArtigoId && s.Quantidade > 0)
-                .OrderBy(s => s.CreatedAt)
-                .FirstOrDefault();
-
-            if (stock is null)
-            {
-                throw new ArtigoNaoEncontradoException(artigo.ArtigoId);
-            }
-
-            var restante = quantidade;
-            Stock primeiroStock = stock;
-
-            foreach (var lote in _stocks
-                .Where(s => s.ArtigoId == artigo.ArtigoId && s.Quantidade > 0)
-                .OrderBy(s => s.CreatedAt))
-            {
-                var remover = Math.Min(lote.Quantidade, restante);
-                lote.DecrementarQuantidade(remover);
-                restante -= remover;
-
-                if (restante == 0)
-                    break;
-            }
-
-            if (restante > 0)
-                throw new DomainException("Quantidade de stock insuficiente.");
-
-            return primeiroStock;
+            Ativo = false;
         }
     }
 }
